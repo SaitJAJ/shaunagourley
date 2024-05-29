@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cloudflare-preview": "npx @cloudflare/next-on-pages@1 && npx wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
+    "@cloudflare/next-on-pages": "^1.11.3",
+    "mongodb": "^6.6.2",
     "react": "^18",
     "react-dom": "^18",
     "next": "14.2.3"
