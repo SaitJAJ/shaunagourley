@@ -21,7 +21,7 @@ export async function POST(req,res){
     // })
 
     let data = await findAll({
-        collection:"test",
+        collection:"panels",
         filter:filer
     })
     console.log

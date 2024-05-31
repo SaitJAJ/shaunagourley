@@ -1,4 +1,5 @@
 import ListArticles from "@/components/ListArticles";
+import QueryClientWrapper from "@/components/QueryClientWrapper";
 
 export const runtime = 'edge'
 
@@ -10,7 +11,10 @@ export default function Page(){
     return(
         <>
             <h1>Articles</h1>
-            <ListArticles/>
+            <QueryClientWrapper>
+                <ListArticles/>
+            </QueryClientWrapper>
+
         </>
     )
 }

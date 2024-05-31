@@ -1,11 +1,9 @@
-import {findAll, findOne, insertOne} from "@/lib/databaseFunctions";
+import {findAll, findOne, insertOne, updateOne} from "@/lib/databaseFunctions";
 import {NextResponse as Response} from "next/server";
 
 export const runtime = 'edge'
 export async function POST(req,res){
-    let filer = await req.json()
-
-    // console.log(req)
+    let query = await req.json()
     // await insertOne({
     //     collection:"test",
     //     document:{
@@ -19,13 +17,12 @@ export async function POST(req,res){
     //         category:"safety"
     //     }
     // })
-
-    let data = await findAll({
+    let data = await updateOne({
         collection:"test",
-        filter:filer
+        filter:query.filter,
+        update:query.update
     })
-    console.log
-    // return new Response.json({status:400})
-    // console.log(data)
+    console.log(data)
     return new Response(JSON.stringify(data))
+    // return new Response()
 }

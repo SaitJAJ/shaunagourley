@@ -20,11 +20,11 @@ export async function POST(req,res){
     //     }
     // })
 
-    let data = await findAll({
+    let data = await findOne({
         collection:"test",
         filter:filer
     })
-    console.log
+    console.log(data)
     // return new Response.json({status:400})
     // console.log(data)
     return new Response(JSON.stringify(data))

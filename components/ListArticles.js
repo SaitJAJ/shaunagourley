@@ -8,7 +8,7 @@ import LoadingBar from "@/components/LoadingBar";
 export default function ListArticles(){
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const {replace} = useRouter()
+    const {replace,} = useRouter()
     const [searchCategory, setSearchCategory]=useState(searchParams.get('category')||'safety')
     const getArticles=async () => {
         console.log("new fetch")
@@ -76,6 +76,9 @@ export default function ListArticles(){
                                         <p>
                                             {article.title}
                                         </p>
+                                        <input type={'button'} onClick={()=> {
+                                            replace(`/account/articles/${article._id}`)
+                                        }}/>
                                     </div>
                                 )
                             })}
