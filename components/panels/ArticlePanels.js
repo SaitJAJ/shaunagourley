@@ -1,7 +1,7 @@
 'use client'
 
-import NewPanel from "@/components/NewPanel";
-import ListPanels from "@/components/ListPanels";
+import NewPanel from "@/components/panels/NewPanel";
+import ListPanels from "@/components/panels/ListPanels";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import LoadingBar from "@/components/LoadingBar";
 
@@ -15,7 +15,6 @@ export default function ArticlePanels({articleId}){
                     articleId:articleId
                 })
         })
-
         if (!response.ok) {
             throw new Error("Received status that was not ok!")
         }
@@ -71,7 +70,8 @@ export default function ArticlePanels({articleId}){
             }
 
             {/*<NewPanel/>*/}
-            <input type={"button"} value={'Add Panel'} onClick={addArticle}/>
+            {/*<input type={"button"} value={'Add DatabaseObjects'} onClick={addArticle}/>*/}
+
         </>
     )
 }

@@ -20,7 +20,8 @@ export async function POST(req,res){
     let data = await updateOne({
         collection:"panels",
         filter:query.filter,
-        update:query.update
+        update:query.update,
+        upsert:true
     })
     console.log(data)
     return new Response(JSON.stringify(data))

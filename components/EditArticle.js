@@ -2,10 +2,11 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import ListArticles from "@/components/ListArticles";
 import LoadingBar from "@/components/LoadingBar";
-import ListPanels from "@/components/ListPanels";
+import ListPanels from "@/components/panels/ListPanels";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
-import NewPanel from "@/components/NewPanel";
-import ArticlePanels from "@/components/ArticlePanels";
+import NewPanel from "@/components/panels/NewPanel";
+import ArticlePanels from "@/components/panels/ArticlePanels";
+import {ArticleProvider} from "@/contextProviders/useArticleContext";
 
 export default function EditArticle({articleId}){
     const getArticles=async () => {
@@ -51,7 +52,6 @@ export default function EditArticle({articleId}){
             }
         })
     const {data,error,isFetching, refetch} = useQuery({queryKey:[articleId],queryFn:getArticles})
-    console.log(data)
     return(
         <>
             {articleId}
@@ -74,7 +74,9 @@ export default function EditArticle({articleId}){
                         <input type={'submit'} value={'Update in DB'} />
                     </form>
                     <QueryClientWrapper>
-                        <ArticlePanels articleId={articleId}/>
+                        <ArticleProvider>
+                            <ArticlePanels articleId={articleId}/>
+                        </ArticleProvider>
                     </QueryClientWrapper>
                 </>
                 :
