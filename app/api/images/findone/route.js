@@ -3,7 +3,7 @@ import {NextResponse as Response} from "next/server";
 
 export const runtime = 'edge'
 export async function POST(req,res){
-    let filer = await req.json()
+    let filter = await req.json()
 
     // console.log(req)
     // await insertOne({
@@ -20,9 +20,9 @@ export async function POST(req,res){
     //     }
     // })
 
-    let data = await findAll({
-        collection:"panels",
-        filter:filer
+    let data = await findOne({
+        collection:"images",
+        filter:filter
     })
     // return new Response.json({status:400})
     // console.log(data)

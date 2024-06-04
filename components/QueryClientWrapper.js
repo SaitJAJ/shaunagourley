@@ -1,5 +1,6 @@
 'use client'
 import {QueryClient, QueryClientProvider, QueryErrorResetBoundary} from "@tanstack/react-query";
+import {Suspense} from "react";
 // import {ErrorBoundary} from "react-error-boundary";
 
 export default function QueryClientWrapper({children}){
@@ -7,6 +8,7 @@ export default function QueryClientWrapper({children}){
 
     return(
         <QueryClientProvider client={queryClient}>
+            <Suspense fallback={<></>}>
             {/*<QueryErrorResetBoundary>*/}
             {/*    {({reset})=>(*/}
             {/*        <ErrorBoundary*/}
@@ -22,6 +24,7 @@ export default function QueryClientWrapper({children}){
             {/*        </ErrorBoundary>*/}
             {/*    )}*/}
             {/*</QueryErrorResetBoundary>*/}
+                </Suspense>
         </QueryClientProvider>
     )
 }

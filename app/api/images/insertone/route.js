@@ -3,9 +3,17 @@ import {NextResponse as Response} from "next/server";
 
 export const runtime = 'edge'
 export async function POST(req,res){
-    let filer = await req.json()
+    let formData =await req.formData()
 
-    // console.log(req)
+    let file = formData.get("file");
+    let buffer = Buffer.from(await file.arrayBuffer())
+
+    let document = {
+        panelId:formData.get('panelId'),
+        imagePosition:formData.get('imagePosition'),
+        srcBuffer:buffer,
+        srcAlt:formData.get("alt")||"Image ALT"
+    }
     // await insertOne({
     //     collection:"test",
     //     document:{
@@ -19,12 +27,11 @@ export async function POST(req,res){
     //         category:"safety"
     //     }
     // })
-
-    let data = await findAll({
-        collection:"panels",
-        filter:filer
+    let data = await insertOne({
+        collection:"images",
+        document:document
     })
-    // return new Response.json({status:400})
-    // console.log(data)
+    console.log(data)
     return new Response(JSON.stringify(data))
+    // return new Response(JSON.stringify("da"))
 }

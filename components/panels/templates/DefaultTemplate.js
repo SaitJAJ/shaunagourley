@@ -3,30 +3,15 @@ import BaseTemplate from "@/components/panels/templates/BaseTemplate";
 import {useEffect, useState} from "react";
 import {useDebouncedCallback} from "use-debounce";
 
-export default function DefaultTemplate({panel,mutation}){
+export default function DefaultTemplate({panel,handleInput}){
 
-    const handleInput =  useDebouncedCallback((e)=>{
-        e.preventDefault()
-        let newPanel = Object.assign({paragraphs:[]},panel);
-        let [editType,editLocation] = e.target.id.split(':')
-        switch(editType){
-            case("p"):
-                if(newPanel.paragraphs){
-                    newPanel.paragraphs[editLocation] = e.target.innerText
-                    break
-                }
-                break
-            case("i"):
-                break
-        }
-        mutation.mutate(newPanel)
-    },7500)
+
     useEffect(()=>{
         console.log(panel.paragraphs)
         if(panel.paragraphs){
             console.log(panel.paragraphs)
             panel.paragraphs.map((text,index)=>{
-                document.getElementById(`p:${index}`).innerText = text;
+                // document.getElementById(`p:${index}`).innerHTML = text;
             })
         }
 
@@ -34,10 +19,14 @@ export default function DefaultTemplate({panel,mutation}){
 
     return(
         <BaseTemplate>
+            <p>
+                {panel.template}
+            </p>
             <p>{panel._id}</p>
-            <p className={'border-black border h-[3.2lh] caret-black p-[.1lh]'} id={'p:0'} suppressContentEditableWarning contentEditable onInput={handleInput}>
+            <p className={'border-black border min-h-[3.2lh] caret-black p-[.1lh]'} id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={(e)=>handleInput(e,panel)}>
                 {/*{panel1}*/}
             </p>
+            <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
         </BaseTemplate>
     )
 }

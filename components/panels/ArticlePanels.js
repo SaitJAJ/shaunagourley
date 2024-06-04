@@ -8,7 +8,7 @@ import LoadingBar from "@/components/LoadingBar";
 export default function ArticlePanels({articleId}){
     const getPanels=async () => {
         console.log(articleId)
-        let response = await fetch("http://localhost:3000/api/panels/findall", {
+        let response = await fetch("http://localhost:8788/api/panels/findall", {
             method: "POST",
             body: JSON.stringify(
                 {
@@ -22,7 +22,7 @@ export default function ArticlePanels({articleId}){
     }
     const editArticle=async (data)=>{
         console.log(data)
-        let response = await fetch("http://localhost:3000/api/panels/updateone", {
+        let response = await fetch("http://localhost:8788/api/panels/updateone", {
             method: "POST",
             body: JSON.stringify({
                 filter: {
@@ -38,12 +38,12 @@ export default function ArticlePanels({articleId}){
         })
     }
     const {data,error,isFetching, refetch} = useQuery({queryKey:[articleId],queryFn:getPanels})
-    const addArticle=async()=>{
-        let response = await fetch("http://localhost:3000/api/panels/insertone", {
+    const addArticle=async(template)=>{
+        let response = await fetch("http://localhost:8788/api/panels/insertone", {
             method: "POST",
             body: JSON.stringify({
                 "articleId":articleId,
-                "template":1
+                "template":template
             })
         })
         refetch()
@@ -69,8 +69,7 @@ export default function ArticlePanels({articleId}){
                     <>error!</>
             }
 
-            {/*<NewPanel/>*/}
-            {/*<input type={"button"} value={'Add DatabaseObjects'} onClick={addArticle}/>*/}
+            <NewPanel addArticle={addArticle}/>
 
         </>
     )

@@ -12,7 +12,7 @@ export default function ListArticles(){
     const [searchCategory, setSearchCategory]=useState(searchParams.get('category')||'safety')
     const getArticles=async () => {
         console.log("new fetch")
-        let response = await fetch("http://localhost:3000/api/articles/findall", {
+        let response = await fetch("http://localhost:8788/api/articles/findall", {
             method: "POST",
             body: JSON.stringify({
                 "category": searchCategory
@@ -56,11 +56,11 @@ export default function ListArticles(){
                     </p>
                     <label className={'flex'}>
                         <p>Chose Category</p>
-                        <select className={'border-[2px] border-gray-500 mx-2'} id={'category'} onChange={changeCategory}>
-                            <option selected={searchCategory==='health'} value={'health'}>
+                        <select defaultValue={searchCategory} className={'border-[2px] border-gray-500 mx-2'} id={'category'} onChange={changeCategory}>
+                            <option value={'health'}>
                                 health
                             </option>
-                            <option selected={searchCategory==='safety'} value={'safety'}>
+                            <option value={'safety'}>
                                 safety
                             </option>
                         </select>

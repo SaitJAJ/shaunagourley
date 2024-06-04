@@ -11,7 +11,7 @@ import {ArticleProvider} from "@/contextProviders/useArticleContext";
 export default function EditArticle({articleId}){
     const getArticles=async () => {
         console.log(articleId)
-        let response = await fetch("http://localhost:3000/api/articles/findone", {
+        let response = await fetch("http://localhost:8788/api/articles/findone", {
             method: "POST",
             body: JSON.stringify({
                 _id:{"$oid":articleId}
@@ -25,7 +25,7 @@ export default function EditArticle({articleId}){
     }
     const editArticle=async (data)=>{
         console.log(data)
-        let response = await fetch("http://localhost:3000/api/articles/updateone", {
+        let response = await fetch("http://localhost:8788/api/articles/updateone", {
             method: "POST",
             body: JSON.stringify({
                 filter: {
@@ -63,11 +63,11 @@ export default function EditArticle({articleId}){
                         mutation.mutate({title:e.target.title.value,category:e.target.category.value})
                     }}>
                         <input type={'text'} id={'title'} defaultValue={data.document.title}/>
-                        <select className={' border-2 border-black'} id={'category'}>
-                            <option selected={data.document.category==='safety'} className={'active:bg-yellow-200'}>
+                        <select defaultValue={data.document.category} className={' border-2 border-black'} id={'category'}>
+                            <option>
                                 safety
                             </option>
-                            <option selected={data.document.category==='safety'}>
+                            <option>
                                 health
                             </option>
                         </select>
