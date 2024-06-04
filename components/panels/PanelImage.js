@@ -1,33 +1,35 @@
-import {useQuery} from "@tanstack/react-query";
-import {useState} from "react";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useEffect, useState} from "react";
 import ListPanels from "@/components/panels/ListPanels";
 import LoadingBar from "@/components/LoadingBar";
 
-export default function PanelImage({panelId,imagePosition,uploadPhoto}){
+export default function PanelImage({panelId,imagePosition}){
     const [imageSource, setImageSource] = useState()
-
+    const uploadPhoto = async ({file, dataUrl, imagePosition, panelId})=>{
+        // console.log(file)
+        // console.log(await file.arrayBuffer())
+        const formData = new FormData()
+        formData.append('file',file)
+        formData.append('panelId',panelId)
+        formData.append('imagePosition',imagePosition)
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/upsertone",{
+            method:"POST",
+            body:formData
+        })
+    }
     const handleDrop=(e)=>{
         e.preventDefault()
-        // console.log(e.dataTransfer.files)
         Object.values(e.dataTransfer.files).map(file=>{
             if(file.type.includes('image')){
                 readFile(file)
             }
         })
     }
-    const readFile = (file)=>{
-        let reader = new FileReader();
-        reader.onloadend =(e)=>{
-            // console.log(e)
-            setImageSource(reader.result)
-            uploadPhoto(file,imagePosition,panelId)
-        }
-        reader.readAsDataURL(file)
-    }
+
 
     const getImages=async ()=>{
         return new Promise(async (resolve, reject) => {
-            let response = await fetch("http://localhost:8788/api/images/findone", {
+            let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/findone", {
                 method: "POST",
                 body: JSON.stringify(
                     {
@@ -40,13 +42,53 @@ export default function PanelImage({panelId,imagePosition,uploadPhoto}){
             }
             let data = await response.json()
             console.log(data)
-            let blob = new Blob([Buffer.from(data.document.srcBuffer)])
-            resolve({src:URL.createObjectURL(blob)})
+            if(data.document === null){
+                resolve({src:null})
+            }else{
+                let blob = new Blob([Buffer.from(data.document.srcBuffer)])
+                resolve({src:URL.createObjectURL(blob)})
+            }
+
         })
     }
-    const {data,error,isFetching, refetch} = useQuery({queryKey:[panelId, imagePosition],queryFn:getImages})
+    const queryClient = useQueryClient();
+    const mutation = useMutation(
+        {
+            mutationFn:uploadPhoto,
+            onSuccess:()=>{
+                queryClient.refetchQueries({
+                    queryKey:[panelId, imagePosition]
+                })
+            },
+            onMutate:async ({file, dataUrl, imagePosition, panelId})=>{
+                console.log('called here')
+                // Cancel any outgoing refetches
+                // (so they don't overwrite our optimistic update)
+                await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition] })
+
+                // Snapshot the previous value
+                const previousImage = queryClient.getQueryData(['images',panelId, imagePosition])
+
+                let newData = {src:dataUrl}
+                // Optimistically update to the new value
+                queryClient.setQueryData(['images',panelId, imagePosition], newData)
+
+                // Return a context with the previous and new todo
+                return { previousImage, newData }
+                },
+        })
+    const readFile = (file)=>{
+        let reader = new FileReader();
+        reader.onloadend =(e)=>{
+            // console.log(e)
+            let dataUrl = reader.result
+            mutation.mutate({file,dataUrl,imagePosition, panelId})
+        }
+        reader.readAsDataURL(file)
+    }
+    const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition],queryFn:getImages})
     return(
-        <>
+        <div onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
             {data?
                 <>
                     <img alt={'altt'} src={data.src}/>
@@ -57,12 +99,6 @@ export default function PanelImage({panelId,imagePosition,uploadPhoto}){
                     :
                     <>error!</>
             }
-
-            <div className={'w-full border-black border-2 flex justify-center'}>
-                <div className={'border-2 w-60 h-32 bg-green-200 '} onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
-                </div>
-            </div>
-
-        </>
+        </div>
     )
 }

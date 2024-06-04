@@ -6,18 +6,18 @@ import {useDebouncedCallback} from "use-debounce";
 
 export default function ListPanels({panels}){
     const queryClient = useQueryClient()
-    const editArticle=async (data)=>{
-        let response = await fetch("http://localhost:8788/api/panels/updateone", {
+    const editArticle=async (panel)=>{
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/updateone", {
             method: "POST",
             body: JSON.stringify({
                 filter: {
-                    _id: {"$oid": data._id}
+                    _id: {"$oid": panel._id}
                 },
                 update:{
                     "$set":{
-                        title:data.title,
-                        category:data.category,
-                        paragraphs:data.paragraphs
+                        title:panel.title,
+                        category:panel.category,
+                        paragraphs:panel.paragraphs
                     }
                 }
             })
@@ -29,7 +29,6 @@ export default function ListPanels({panels}){
             onMutate: async (panel) => {
                 // Cancel any outgoing refetches
                 // (so they don't overwrite our optimistic update)
-                console.log(panel)
                 await queryClient.cancelQueries({ queryKey: ['panels', panel._id] })
 
                 // Snapshot the previous value
@@ -67,18 +66,7 @@ export default function ListPanels({panels}){
         }
         mutation.mutate(newPanel)
     },7500)
-    const uploadPhoto = async (file,imagePosition,panelId)=>{
-        // console.log(file)
-        // console.log(await file.arrayBuffer())
-        const formData = new FormData()
-        formData.append('file',file)
-        formData.append('panelId',panelId)
-        formData.append('imagePosition',imagePosition)
-        let response = await fetch("http://localhost:8788/api/images/insertone",{
-            method:"POST",
-            body:formData
-        })
-    }
+
     return(
         <>
             {Object.values(panels).map((panel,index)=>{
@@ -89,7 +77,7 @@ export default function ListPanels({panels}){
                         )
                     case(2):
                         return(
-                            <DefaultImageTemplate key={panel._id} panel={panel} mutation={mutation} handleInput={handleInput} uploadPhoto={uploadPhoto}/>
+                            <DefaultImageTemplate key={panel._id} panel={panel} mutation={mutation} handleInput={handleInput} />
                         )
                     default:
                         return(

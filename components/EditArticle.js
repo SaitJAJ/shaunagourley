@@ -11,7 +11,7 @@ import {ArticleProvider} from "@/contextProviders/useArticleContext";
 export default function EditArticle({articleId}){
     const getArticles=async () => {
         console.log(articleId)
-        let response = await fetch("http://localhost:8788/api/articles/findone", {
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/findone", {
             method: "POST",
             body: JSON.stringify({
                 _id:{"$oid":articleId}
@@ -25,7 +25,7 @@ export default function EditArticle({articleId}){
     }
     const editArticle=async (data)=>{
         console.log(data)
-        let response = await fetch("http://localhost:8788/api/articles/updateone", {
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/updateone", {
             method: "POST",
             body: JSON.stringify({
                 filter: {

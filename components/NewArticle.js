@@ -2,7 +2,7 @@
 export default function NewArticle(){
     const insert = async (query)=>{
 
-        let res = await fetch("/api/articles/insertone",{
+        let res = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/insertone",{
             method:"POST",
             body:JSON.stringify(query)
         })

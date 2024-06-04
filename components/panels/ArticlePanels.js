@@ -8,7 +8,7 @@ import LoadingBar from "@/components/LoadingBar";
 export default function ArticlePanels({articleId}){
     const getPanels=async () => {
         console.log(articleId)
-        let response = await fetch("http://localhost:8788/api/panels/findall", {
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/findall", {
             method: "POST",
             body: JSON.stringify(
                 {
@@ -22,7 +22,7 @@ export default function ArticlePanels({articleId}){
     }
     const editArticle=async (data)=>{
         console.log(data)
-        let response = await fetch("http://localhost:8788/api/panels/updateone", {
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/updateone", {
             method: "POST",
             body: JSON.stringify({
                 filter: {
@@ -39,7 +39,7 @@ export default function ArticlePanels({articleId}){
     }
     const {data,error,isFetching, refetch} = useQuery({queryKey:[articleId],queryFn:getPanels})
     const addArticle=async(template)=>{
-        let response = await fetch("http://localhost:8788/api/panels/insertone", {
+        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/insertone", {
             method: "POST",
             body: JSON.stringify({
                 "articleId":articleId,
