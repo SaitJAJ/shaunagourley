@@ -14,7 +14,9 @@ export default function DefaultImageTemplate({panel,handleInput,uploadPhoto}){
             </p>
             <p>{panel._id}</p>
             <QueryClientProvider client={imageQueryClient}>
-                <PanelImage panelId={panel._id} imagePosition={1} uploadPhoto={uploadPhoto}/>
+                <div className={'h-60 flex justify-center'}>
+                    <PanelImage panelId={panel._id} imagePosition={1} uploadPhoto={uploadPhoto}/>
+                </div>
             </QueryClientProvider>
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
         </BaseTemplate>

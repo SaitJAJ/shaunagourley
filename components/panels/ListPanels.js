@@ -3,6 +3,7 @@ import DefaultTemplate from "@/components/panels/templates/DefaultTemplate";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import DefaultImageTemplate from "@/components/panels/templates/DefaultImageTemplate";
 import {useDebouncedCallback} from "use-debounce";
+import ParagraphImageLeft from "@/components/panels/templates/ParagraphImageLeft";
 
 export default function ListPanels({panels}){
     const queryClient = useQueryClient()
@@ -81,7 +82,7 @@ export default function ListPanels({panels}){
                         )
                     default:
                         return(
-                            <DefaultTemplate key={panel._id} panel={panel} mutation={mutation} handleInput={handleInput}/>
+                            <ParagraphImageLeft key={panel._id} panel={panel} mutation={mutation} handleInput={handleInput}/>
                         )
                 }
                 // return(

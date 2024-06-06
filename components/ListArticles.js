@@ -3,7 +3,6 @@ import {QueryClientProvider, useQuery} from "@tanstack/react-query";
 import {useState} from "react";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import LoadingBar from "@/components/LoadingBar";
-import {getPublicEnvs} from "@/middleware";
 
 export default function ListArticles(){
     const searchParams = useSearchParams();
@@ -12,7 +11,6 @@ export default function ListArticles(){
     const [searchCategory, setSearchCategory]=useState(searchParams.get('category')||'safety')
     const getArticles=async () => {
         console.log("new fetch")
-        console.log(await getPublicEnvs({request:null,next:()=>{},env:process.env}))
         let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/findall", {
             method: "POST",
             body: JSON.stringify({

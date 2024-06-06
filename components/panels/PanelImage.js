@@ -61,7 +61,6 @@ export default function PanelImage({panelId,imagePosition}){
                 })
             },
             onMutate:async ({file, dataUrl, imagePosition, panelId})=>{
-                console.log('called here')
                 // Cancel any outgoing refetches
                 // (so they don't overwrite our optimistic update)
                 await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition] })
@@ -88,17 +87,17 @@ export default function PanelImage({panelId,imagePosition}){
     }
     const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition],queryFn:getImages})
     return(
-        <div onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
+        <>
             {data?
-                <>
-                    <img alt={'altt'} src={data.src}/>
-                </>
+                <div className={'object-contain flex'} onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
+                    <img className={'object-contain'} alt={'altt'} src={data.src}/>
+                </div>
                 :
                 isFetching?
                     <LoadingBar/>
                     :
                     <>error!</>
             }
-        </div>
+        </>
     )
 }
