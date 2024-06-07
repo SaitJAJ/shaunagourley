@@ -12,7 +12,9 @@ export default function Dev(){
     }
     const getJwt=async () => {
         let res = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/test")
-        setOutput((await res.json()).data)
+        let data = (await res.json())
+        console.log(JSON.stringify(data))
+        setOutput(JSON.stringify(data))
     }
     return(
         <>

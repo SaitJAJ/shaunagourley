@@ -5,6 +5,7 @@ export const runtime = 'edge';
 export async function GET(res) {
     let cookie = cookies().get('jwtoken')
     let val = await getJwtData(cookie)
+    console.log(val)
     return new Response(JSON.stringify(val))
 }
 export async function POST(res,req){
