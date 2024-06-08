@@ -17,7 +17,6 @@ export default function ListArticles(){
                 "category": searchCategory
             })
         })
-
         if (!response.ok) {
             throw new Error("Received status that was not ok!")
         }
@@ -69,11 +68,13 @@ export default function ListArticles(){
                 {
                     data?
                         <div className={'flex overflow-x-auto w-full justify-evenly'}>
-                            {Object.values(data.documents).map(article=>{
+                            {data.documents.map(article=>{
                                 return(
                                     <div className={'grid shrink-0 grow-0 basis-52 border-2 mx-1 my-2 text-center content-end'} key={article._id}>
                                         <p>
                                             {article.title}
+                                        </p>
+                                        <p>
                                         </p>
                                         <input type={'button'} onClick={()=> {
                                             replace(`/account/articles/${article._id}`)

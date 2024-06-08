@@ -24,8 +24,13 @@ export async function POST(req,res){
         collection:"test",
         filter:filer
     })
-    console.log
     // return new Response.json({status:400})
-    // console.log(data)
+    console.log(data)
+    // let articles = Object.values(data).map(article=>{
+    //     return new Article(...article)
+    // })
+
+
+
     return new Response(JSON.stringify(data))
 }

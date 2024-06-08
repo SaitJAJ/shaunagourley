@@ -1,5 +1,6 @@
 'use client'
 import {useState} from "react";
+import {useRouter} from "next/navigation";
 
 export default function Dev(){
     const [stateVal,setStateVal] = useState("Default Val")
@@ -10,8 +11,12 @@ export default function Dev(){
             body:JSON.stringify({data:stateVal})
         })
     }
+    const router = useRouter();
     const getJwt=async () => {
         let res = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/test")
+        if(res.redirected){
+            router.push(res.url)
+        }
         let data = (await res.json())
         console.log(JSON.stringify(data))
         setOutput(JSON.stringify(data))

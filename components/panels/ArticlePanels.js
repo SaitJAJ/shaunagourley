@@ -18,6 +18,7 @@ export default function ArticlePanels({articleId}){
         if (!response.ok) {
             throw new Error("Received status that was not ok!")
         }
+
         return response.json()
     }
     const editArticle=async (data)=>{

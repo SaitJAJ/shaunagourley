@@ -10,4 +10,4 @@ export async function POST(res, req) {
     await setJwt({email: email})
 
     return new Response();
-}
+}w
