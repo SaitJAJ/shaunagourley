@@ -10,7 +10,6 @@ export default function ListArticles(){
     const {replace,} = useRouter()
     const [searchCategory, setSearchCategory]=useState(searchParams.get('category')||'safety')
     const getArticles=async () => {
-        console.log("new fetch")
         let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/findall", {
             method: "POST",
             body: JSON.stringify({
