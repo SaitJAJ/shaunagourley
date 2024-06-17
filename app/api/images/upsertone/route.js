@@ -4,10 +4,8 @@ import {NextResponse as Response} from "next/server";
 export const runtime = 'edge'
 export async function POST(req,res){
     let formData =await req.formData()
-
     let file = formData.get("file");
     let buffer = Buffer.from(await file.arrayBuffer())
-
     let document = {
         filter:{
             panelId:formData.get('panelId'),
@@ -19,7 +17,6 @@ export async function POST(req,res){
                 srcAlt:formData.get("alt")||"Image ALT"
             }
         }
-
     }
     // await insertOne({
     //     collection:"test",
@@ -40,7 +37,7 @@ export async function POST(req,res){
         update:document.update,
         upsert:true
     })
-    console.log(data)
+    // console.log(data,"DATA")
     return new Response(JSON.stringify(data))
     // return new Response()
 }

@@ -2,6 +2,7 @@
 import {QueryClient, QueryClientProvider, QueryErrorResetBoundary} from "@tanstack/react-query";
 import {Suspense} from "react";
 // import {ErrorBoundary} from "react-error-boundary";
+export const runtime='edge'
 
 export default function QueryClientWrapper({children}){
     const queryClient = new QueryClient()

@@ -1,12 +1,9 @@
 'use client'
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import ListArticles from "@/components/ListArticles";
 import LoadingBar from "@/components/LoadingBar";
-import ListPanels from "@/components/panels/ListPanels";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
-import NewPanel from "@/components/panels/NewPanel";
-import ArticlePanels from "@/components/panels/ArticlePanels";
 import {ArticleProvider} from "@/contextProviders/useArticleContext";
+import {DisplayArticlePanels, EditableArticlePanels} from "@/components/panels/ArticlePanels";
 
 export default function EditArticle({articleId}){
     const getArticles=async () => {
@@ -75,14 +72,12 @@ export default function EditArticle({articleId}){
                     </form>
                     <QueryClientWrapper>
                         <ArticleProvider>
-                            <ArticlePanels articleId={articleId}/>
+                            <EditableArticlePanels articleId={articleId}/>
                         </ArticleProvider>
                     </QueryClientWrapper>
                 </>
                 :
                 isFetching?<LoadingBar/>:<></>
-
-
             }
 
             {/*<ListArticles/>*/}

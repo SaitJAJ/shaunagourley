@@ -1,5 +1,5 @@
-import NewArticle from "@/components/NewArticle";
-import ListArticles from "@/components/ListArticles";
+import NewArticle from "@/components/articles/NewArticle";
+import ListArticles from "@/components/articles/ListArticles";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
 
 export const runtime = 'edge'

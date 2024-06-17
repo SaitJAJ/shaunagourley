@@ -31,7 +31,6 @@ export async function POST(req,res){
         collection:"images",
         document:document
     })
-    console.log(data)
     return new Response(JSON.stringify(data))
     // return new Response(JSON.stringify("da"))
 }

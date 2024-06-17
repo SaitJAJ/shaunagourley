@@ -1,5 +1,4 @@
-import ListArticles from "@/components/ListArticles";
-import {Suspense} from "react";
+import ListArticles from "@/components/articles/ListArticles";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
 import Dev from "@/components/Dev";
 

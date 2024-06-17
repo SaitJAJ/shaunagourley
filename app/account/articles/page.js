@@ -1,4 +1,4 @@
-import ListArticles from "@/components/ListArticles";
+import ListArticles from "@/components/articles/ListArticles";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
 
 export const runtime = 'edge'

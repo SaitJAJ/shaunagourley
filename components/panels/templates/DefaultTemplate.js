@@ -1,21 +1,8 @@
-import {Base} from "next/dist/client/components/react-dev-overlay/internal/styles/Base";
 import BaseTemplate from "@/components/panels/templates/BaseTemplate";
-import {useEffect, useState} from "react";
-import {useDebouncedCallback} from "use-debounce";
+import {useEffect} from "react";
+import {EditableParagraph} from "@/components/paragraph/Paragraph";
 
-export default function DefaultTemplate({panel,handleInput}){
-
-
-    useEffect(()=>{
-        console.log(panel.paragraphs)
-        if(panel.paragraphs){
-            console.log(panel.paragraphs)
-            panel.paragraphs.map((text,index)=>{
-                // document.getElementById(`p:${index}`).innerHTML = text;
-            })
-        }
-
-    },[])
+export function EditableDefaultTemplate({panel,handleInput}){
 
     return(
         <BaseTemplate>
@@ -23,10 +10,25 @@ export default function DefaultTemplate({panel,handleInput}){
                 {panel.template}
             </p>
             <p>{panel._id}</p>
-            <p className={'border-black border min-h-[3.2lh] caret-black p-[.1lh]'} id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={(e)=>handleInput(e,panel)}>
-                {/*{panel1}*/}
-            </p>
+            <EditableParagraph panel={panel}/>
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
+        </BaseTemplate>
+    )
+}
+export function DisplayDefaultTemplate({panel,handleInput}){
+
+    return(
+        <BaseTemplate>
+            {
+                panel.paragraphs?
+                    panel.paragraphs.map((paragraph,index)=>{
+                        return(
+                            <p key={`${panel._id}:${index}`} className={'caret-black p-[.1lh] border-black border'} id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:paragraph}}/>
+                        )
+                    })
+                    :<></>
+            }
+
         </BaseTemplate>
     )
 }

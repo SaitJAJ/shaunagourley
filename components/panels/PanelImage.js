@@ -1,13 +1,12 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useEffect, useState} from "react";
-import ListPanels from "@/components/panels/ListPanels";
 import LoadingBar from "@/components/LoadingBar";
 
-export default function PanelImage({panelId,imagePosition}){
-    const [imageSource, setImageSource] = useState()
-    const uploadPhoto = async ({file, dataUrl, imagePosition, panelId})=>{
-        // console.log(file)
-        // console.log(await file.arrayBuffer())
+export const runtime = 'edge'
+
+export function EditablePanelImage({panelId,imagePosition}){
+    const uploadPhoto = async ({file, imagePosition, panelId})=>{
+        console.log("upload")
         const formData = new FormData()
         formData.append('file',file)
         formData.append('panelId',panelId)
@@ -16,14 +15,7 @@ export default function PanelImage({panelId,imagePosition}){
             method:"POST",
             body:formData
         })
-    }
-    const handleDrop=(e)=>{
-        e.preventDefault()
-        Object.values(e.dataTransfer.files).map(file=>{
-            if(file.type.includes('image')){
-                readFile(file)
-            }
-        })
+        return(file)
     }
 
 
@@ -41,14 +33,14 @@ export default function PanelImage({panelId,imagePosition}){
                 throw new Error("Received status that was not ok!")
             }
             let data = await response.json()
-            console.log(data)
             if(data.document === null){
                 resolve({src:null})
             }else{
                 let blob = new Blob([Buffer.from(data.document.srcBuffer)])
-                resolve({src:URL.createObjectURL(blob)})
+                let newData = {src:URL.createObjectURL(blob)}
+                console.log("from Query",newData)
+                resolve(newData)
             }
-
         })
     }
     const queryClient = useQueryClient();
@@ -56,40 +48,85 @@ export default function PanelImage({panelId,imagePosition}){
         {
             mutationFn:uploadPhoto,
             onSuccess:()=>{
-                queryClient.refetchQueries({
-                    queryKey:[panelId, imagePosition]
-                })
+                console.log('success')
+                // *********************************************************************
+                //  This does not work when also calling onMutate! Comment it out if fetching data from database after
+                //  upload without eagerly setting content!
+                //
+                // *********************************************************************
+                // queryClient.refetchQueries({
+                //     queryKey:['images',panelId, imagePosition.toString()]
+                // })
             },
-            onMutate:async ({file, dataUrl, imagePosition, panelId})=>{
+            onMutate:async ({file, imagePosition, panelId})=>{
+                console.log("mutate")
                 // Cancel any outgoing refetches
                 // (so they don't overwrite our optimistic update)
-                await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition] })
-
+                await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition.toString()] })
+                console.log(panelId,imagePosition)
                 // Snapshot the previous value
-                const previousImage = queryClient.getQueryData(['images',panelId, imagePosition])
-
-                let newData = {src:dataUrl}
+                const previousImage = queryClient.getQueryData(['images',panelId, imagePosition.toString()])
+                let newData = Object.assign({src:URL.createObjectURL(file)})
+                console.log("from Mutates",newData)
+                // setImageSource(newData)
                 // Optimistically update to the new value
-                queryClient.setQueryData(['images',panelId, imagePosition], newData)
-
-                // Return a context with the previous and new todo
+                queryClient.setQueryData(['images',panelId, imagePosition.toString()], newData)
                 return { previousImage, newData }
                 },
         })
-    const readFile = (file)=>{
-        let reader = new FileReader();
-        reader.onloadend =(e)=>{
-            // console.log(e)
-            let dataUrl = reader.result
-            mutation.mutate({file,dataUrl,imagePosition, panelId})
-        }
-        reader.readAsDataURL(file)
+    const handleDrop=(e)=>{
+        e.preventDefault()
+        Object.values(e.dataTransfer.files).map(file=>{
+            if(file.type.includes('image')){
+                mutation.mutate({file,imagePosition,panelId})
+            }
+        })
+    }
+    const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition.toString()],queryFn:getImages})
+    return(
+        <>
+            {data?
+                <div className={'object-contain flex'} onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
+                    <img className={'object-contain'} alt={'altt'} draggable={false} src={data.src}/>
+                </div>
+                :
+                isFetching?
+                    <LoadingBar/>
+                    :
+                    <>error!</>
+            }
+        </>
+    )
+}
+export function DisplayPanelImage({panelId,imagePosition}){
+
+    const getImages=async ()=>{
+        return new Promise(async (resolve, reject) => {
+            let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/findone", {
+                method: "POST",
+                body: JSON.stringify(
+                    {
+                        panelId: panelId,
+                        imagePosition: imagePosition.toString(),
+                    })
+            })
+            if (!response.ok) {
+                throw new Error("Received status that was not ok!")
+            }
+            let data = await response.json()
+            if(data.document === null){
+                resolve({src:null})
+            }else{
+                let blob = new Blob([Buffer.from(data.document.srcBuffer)])
+                resolve({src:URL.createObjectURL(blob)})
+            }
+        })
     }
     const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition],queryFn:getImages})
     return(
         <>
             {data?
-                <div className={'object-contain flex'} onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
+                <div className={'object-contain flex'} >
                     <img className={'object-contain'} alt={'altt'} src={data.src}/>
                 </div>
                 :

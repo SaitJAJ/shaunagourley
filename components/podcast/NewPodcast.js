@@ -15,7 +15,6 @@ export default function NewPodcast(){
             videoIds.push(url.split("?v=")[1].split('&')[0])
         })
         // let videoIds = (element.value.split(',')[0].split("?v=")[1].split('&')[0])
-        console.log(process.env.NEXT_PUBLIC_YOUTUBE_API_KEY)
         let res = await fetch("https://www.googleapis.com/youtube/v3/videos?"+new URLSearchParams({
             key:process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
             part:["snippet"],

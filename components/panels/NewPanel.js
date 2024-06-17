@@ -18,6 +18,10 @@ export default function NewPanel({addArticle}){
             title:"TextImageLeft",
             image:'image'
         },
+        {
+            title:"TextImageRight",
+            image:'image'
+        },
     ]
 
     const selectedBorder="border-2 border-blue-500 p-2"

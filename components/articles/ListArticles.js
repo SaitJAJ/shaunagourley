@@ -7,7 +7,7 @@ import LoadingBar from "@/components/LoadingBar";
 export default function ListArticles(){
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const {replace,} = useRouter()
+    const {replace,push} = useRouter()
     const [searchCategory, setSearchCategory]=useState(searchParams.get('category')||'safety')
     const getArticles=async () => {
         let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/articles/findall", {
@@ -21,7 +21,7 @@ export default function ListArticles(){
         }
         return response.json()
     }
-    const {data,error,isFetching, refetch} = useQuery({queryKey:[searchCategory],queryFn:getArticles})
+    const {data,error,isFetching, refetch} = useQuery({queryKey:[searchCategory,"category"],queryFn:getArticles})
 
 
     const findClick = async ()=>{
@@ -44,6 +44,15 @@ export default function ListArticles(){
             params.delete(e.target.id)
         }
         replace(`${pathname}?${params.toString()}`,{scroll:false});
+    }
+    const navigateToArticle=(id)=>{
+        console.log(pathname.toString())
+        if(pathname.startsWith('/account')){
+            push(`/account/articles/${id}`)
+        }else{
+            push(`/articles/${id}`)
+        }
+
     }
     return(
         <div className={'border-2 border-black bg-gray-300'}>
@@ -76,7 +85,7 @@ export default function ListArticles(){
                                         <p>
                                         </p>
                                         <input type={'button'} onClick={()=> {
-                                            replace(`/account/articles/${article._id}`)
+                                            navigateToArticle(article._id)
                                         }}/>
                                     </div>
                                 )

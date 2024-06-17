@@ -1,5 +1,5 @@
 'use client'
-import EditArticle from "@/components/EditArticle";
+import EditArticle from "@/components/articles/EditArticle";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
 
 export const runtime='edge'
@@ -13,6 +13,7 @@ export default function Page({params}){
         <>
             <QueryClientWrapper>
                 <EditArticle articleId={params.articleId}/>
+                {/*<EditArticle/>*/}
             </QueryClientWrapper>
         </>
     )
