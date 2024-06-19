@@ -1,12 +1,17 @@
 import {findAll, findOne, insertOne, updateOne} from "@/lib/databaseFunctions";
 import {NextResponse as Response} from "next/server";
+import {buildDataRoute} from "next/dist/server/lib/router-utils/build-data-route";
 
 export const runtime = 'edge'
 export async function POST(req,res){
     let formData =await req.formData()
     let file = formData.get("file");
-    let buffer = Buffer.from(await file.arrayBuffer())
+    let buffer =Buffer.from(await file.arrayBuffer())
     console.log(buffer.length)
+    if(buffer.length > 1353582){
+        return new Response(JSON.stringify({errorMessage:"Photo size too big (for unknown reason)"}),{status:400})
+
+    }
     let document = {
         filter:{
             panelId:formData.get('panelId'),
