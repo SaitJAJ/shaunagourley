@@ -1,9 +1,10 @@
 import BaseTemplate from "@/components/panels/templates/BaseTemplate";
 import {QueryClient, QueryClientProvider, useQueryClient} from "@tanstack/react-query";
 import {DisplayPanelImage, EditablePanelImage} from "@/components/panels/PanelImage";
+import QueryClientWrapper from "@/components/QueryClientWrapper";
+import {EditableParagraph} from "@/components/paragraph/Paragraph";
 
-export function EditableParagraphImageRight({panel,handleInput,uploadPhoto}){
-    const imageQueryClient = new QueryClient()
+export function EditableParagraphImageRight({panel}){
     return(
         <BaseTemplate>
             <p>
@@ -11,15 +12,15 @@ export function EditableParagraphImageRight({panel,handleInput,uploadPhoto}){
             </p>
             <p>{panel._id}</p>
             <div className={'h-fit min-h-60 border-black border caret-black '}>
-                <QueryClientProvider client={imageQueryClient}>
+                <QueryClientWrapper>
                     <div className={'h-60 flex float-right min-h-8'}>
-                        <EditablePanelImage panelId={panel._id} imagePosition={1} uploadPhoto={uploadPhoto}/>
+                        <EditablePanelImage panelId={panel._id} imagePosition={1}/>
                     </div>
-                </QueryClientProvider>
-                <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={(e)=>handleInput(e,panel)}>
-                </p>
+                </QueryClientWrapper>
+                {/*<QueryClientWrapper>*/}
+                {/*    <EditableParagraph panel={panel}/>*/}
+                {/*</QueryClientWrapper>*/}
             </div>
-            <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
         </BaseTemplate>
     )
 }

@@ -66,7 +66,6 @@ export function EditableParagraph({panel}){
 
     return(
         <>
-            <p>{panel._id}</p>
             <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={handleInput}>
             </p>
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>

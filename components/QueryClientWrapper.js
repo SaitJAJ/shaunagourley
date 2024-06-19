@@ -6,7 +6,7 @@ export const runtime='edge'
 
 export default function QueryClientWrapper({children}){
     const queryClient = new QueryClient()
-
+    console.log("Fresh query client")
     return(
         <QueryClientProvider client={queryClient}>
             <Suspense fallback={<></>}>

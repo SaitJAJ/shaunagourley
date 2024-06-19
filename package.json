@@ -19,7 +19,7 @@
     "react-dom": "^18",
     "react-error-boundary": "^4.0.13",
     "use-debounce": "^10.0.1",
-    "wrangler": "^3.59.0"
+    "wrangler": "^3.61.0"
   },
   "devDependencies": {
     "eslint": "^8",

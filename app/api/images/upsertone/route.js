@@ -6,6 +6,7 @@ export async function POST(req,res){
     let formData =await req.formData()
     let file = formData.get("file");
     let buffer = Buffer.from(await file.arrayBuffer())
+    console.log(buffer.length)
     let document = {
         filter:{
             panelId:formData.get('panelId'),
@@ -31,13 +32,19 @@ export async function POST(req,res){
     //         category:"safety"
     //     }
     // })
+    console.log(document.filter)
     let data = await updateOne({
         collection:"images",
         filter:document.filter,
         update:document.update,
         upsert:true
     })
+    if(data.error){
+        console.log("error!")
+        return new Response(JSON.stringify(data),{status:500})
+    }
     // console.log(data,"DATA")
+
     return new Response(JSON.stringify(data))
     // return new Response()
 }

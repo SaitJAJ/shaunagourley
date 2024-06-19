@@ -1,21 +1,28 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useEffect, useState} from "react";
 import LoadingBar from "@/components/LoadingBar";
+import FuzzyImage from "@/components/FuzzyImage";
 
 export const runtime = 'edge'
 
 export function EditablePanelImage({panelId,imagePosition}){
+
     const uploadPhoto = async ({file, imagePosition, panelId})=>{
         console.log("upload")
-        const formData = new FormData()
-        formData.append('file',file)
-        formData.append('panelId',panelId)
-        formData.append('imagePosition',imagePosition)
-        let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/upsertone",{
-            method:"POST",
-            body:formData
+        return new Promise(async (resolve, reject) => {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('panelId', panelId)
+            formData.append('imagePosition', imagePosition)
+            let response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/images/upsertone", {
+                method: "POST",
+                body: formData
+            })
+            if (response.ok) {
+                resolve(file)
+            }
+            reject(response)
         })
-        return(file)
     }
 
 
@@ -43,37 +50,99 @@ export function EditablePanelImage({panelId,imagePosition}){
             }
         })
     }
+
+    const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition],queryFn:getImages})
+
     const queryClient = useQueryClient();
-    const mutation = useMutation(
-        {
-            mutationFn:uploadPhoto,
-            onSuccess:()=>{
-                console.log('success')
-                // *********************************************************************
-                //  This does not work when also calling onMutate! Comment it out if fetching data from database after
-                //  upload without eagerly setting content!
-                //
-                // *********************************************************************
-                // queryClient.refetchQueries({
-                //     queryKey:['images',panelId, imagePosition.toString()]
-                // })
-            },
-            onMutate:async ({file, imagePosition, panelId})=>{
-                console.log("mutate")
-                // Cancel any outgoing refetches
-                // (so they don't overwrite our optimistic update)
-                await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition.toString()] })
-                console.log(panelId,imagePosition)
-                // Snapshot the previous value
-                const previousImage = queryClient.getQueryData(['images',panelId, imagePosition.toString()])
-                let newData = Object.assign({src:URL.createObjectURL(file)})
-                console.log("from Mutates",newData)
-                // setImageSource(newData)
-                // Optimistically update to the new value
-                queryClient.setQueryData(['images',panelId, imagePosition.toString()], newData)
-                return { previousImage, newData }
-                },
-        })
+    queryClient.setMutationDefaults(['imageMutation'],{
+        mutationFn:uploadPhoto,
+        onError:(error,variables,context)=>{
+            console.log("On Error called!")
+            // console.log(error)
+            // console.log(variables)
+            console.log(context)
+            queryClient.setQueryData(
+                ['images',panelId,imagePosition],
+                context.previousImage
+            )
+        },
+        onSuccess:()=>{
+            console.log('success')
+            // *********************************************************************
+            //  This does not work when also calling onMutate! Comment it out if fetching data from database after
+            //  upload without eagerly setting content!
+            //
+            // *********************************************************************
+            // queryClient.refetchQueries({
+            //     queryKey:['images',panelId, imagePosition]
+            // })
+        },
+        onMutate:async ({file, imagePosition, panelId})=>{
+            console.log("mutate")
+            // Cancel any outgoing refetches
+            // (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition] })
+            // Snapshot the previous value
+            const previousImage = await queryClient.getQueryData(['images',panelId, imagePosition])
+            console.log("previous Data",previousImage)
+            let newData = Object.assign({src:URL.createObjectURL(file)})
+            console.log("from Mutates",newData)
+            // setImageSource(newData)
+            // Optimistically update to the new value
+            queryClient.setQueryData(['images',panelId, imagePosition], newData)
+            return { previousImage, newData }
+        },
+        onSettled: (newTodo) => {
+            console.log("on Settled")
+            queryClient.invalidateQueries({ queryKey: ['images',panelId, imagePosition] })
+        },
+    })
+    const mutation = useMutation({mutationKey:["imageMutation"]})
+    // const mutation = useMutation(
+    //     {
+    //         mutationFn:uploadPhoto,
+    //         onError:(error,variables,context)=>{
+    //             console.log("On Error called!")
+    //             // console.log(error)
+    //             // console.log(variables)
+    //             console.log(context)
+    //             queryClient.setQueryData(
+    //                 ['images',panelId,imagePosition],
+    //                 context.previousImage
+    //             )
+    //         },
+    //         onSuccess:()=>{
+    //             console.log('success')
+    //             // *********************************************************************
+    //             //  This does not work when also calling onMutate! Comment it out if fetching data from database after
+    //             //  upload without eagerly setting content!
+    //             //
+    //             // *********************************************************************
+    //             // queryClient.refetchQueries({
+    //             //     queryKey:['images',panelId, imagePosition]
+    //             // })
+    //         },
+    //         onMutate:async ({file, imagePosition, panelId})=>{
+    //             console.log("mutate")
+    //             // Cancel any outgoing refetches
+    //             // (so they don't overwrite our optimistic update)
+    //             await queryClient.cancelQueries({ queryKey: ['images',panelId, imagePosition] })
+    //             // Snapshot the previous value
+    //             const previousImage = await queryClient.getQueryData(['images',panelId, imagePosition])
+    //             console.log("previous Data",previousImage)
+    //             let newData = Object.assign({src:URL.createObjectURL(file)})
+    //             console.log("from Mutates",newData)
+    //             // setImageSource(newData)
+    //             // Optimistically update to the new value
+    //             queryClient.setQueryData(['images',panelId, imagePosition], newData)
+    //             return { previousImage, newData }
+    //         },
+    //         onSettled: (newTodo) => {
+    //             console.log("on Settled")
+    //             queryClient.invalidateQueries({ queryKey: ['images',panelId, imagePosition] })
+    //         },
+    //     })
+
     const handleDrop=(e)=>{
         e.preventDefault()
         Object.values(e.dataTransfer.files).map(file=>{
@@ -82,10 +151,12 @@ export function EditablePanelImage({panelId,imagePosition}){
             }
         })
     }
-    const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition.toString()],queryFn:getImages})
     return(
         <>
             {data?
+                mutation.isPending?
+                    <FuzzyImage image={data.src}/>
+                    :
                 <div className={'object-contain flex'} onDragOver={(e)=>e.preventDefault()} onDrop={handleDrop}>
                     <img className={'object-contain'} alt={'altt'} draggable={false} src={data.src}/>
                 </div>
@@ -107,7 +178,7 @@ export function DisplayPanelImage({panelId,imagePosition}){
                 body: JSON.stringify(
                     {
                         panelId: panelId,
-                        imagePosition: imagePosition.toString(),
+                        imagePosition: imagePosition,
                     })
             })
             if (!response.ok) {

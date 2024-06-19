@@ -6,12 +6,8 @@ export function EditableDefaultTemplate({panel,handleInput}){
 
     return(
         <BaseTemplate>
-            <p>
-                {panel.template}
-            </p>
-            <p>{panel._id}</p>
             <EditableParagraph panel={panel}/>
-            <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
+            {/*<input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>*/}
         </BaseTemplate>
     )
 }
