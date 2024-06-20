@@ -3,6 +3,7 @@ import {QueryClient, QueryClientProvider, useQueryClient} from "@tanstack/react-
 import {DisplayPanelImage, EditablePanelImage} from "@/components/panels/PanelImage";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
 import {EditableParagraph} from "@/components/paragraph/Paragraph";
+import {DisplayExternalImage, EditExternalImage} from "@/components/ExternalImage";
 
 export function EditableParagraphImageRight({panel}){
     return(
@@ -13,8 +14,8 @@ export function EditableParagraphImageRight({panel}){
             <p>{panel._id}</p>
             <div className={'h-fit min-h-60 border-black border caret-black '}>
                 <QueryClientWrapper>
-                    <div className={'h-60 flex float-right min-h-8'}>
-                        <EditablePanelImage panelId={panel._id} imagePosition={1}/>
+                    <div className={'h-60 flex justify-center float-right min-h-8'}>
+                        <EditExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
                     </div>
                 </QueryClientWrapper>
                 {/*<QueryClientWrapper>*/}
@@ -30,13 +31,12 @@ export function DisplayParagraphImageRight({panel}){
     return(
         <BaseTemplate>
             <div className={'h-fit caret-black '}>
-                <QueryClientProvider client={imageQueryClient}>
-                    <div className={'h-60 flex float-left min-h-8'}>
-                        <DisplayPanelImage panelId={panel._id} imagePosition={1}/>
-                    </div>
-                </QueryClientProvider>
-                <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'}  dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}}>
-                </p>
+                <div className={'h-60 flex justify-center float-left min-h-8'}>
+                    <DisplayExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
+                </div>
+                <QueryClientWrapper>
+                    <EditableParagraph panel={panel}/>
+                </QueryClientWrapper>
             </div>
         </BaseTemplate>
     )

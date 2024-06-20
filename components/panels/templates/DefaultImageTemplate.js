@@ -3,6 +3,7 @@ import {useState} from "react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {DisplayPanelImage, EditablePanelImage} from "@/components/panels/PanelImage";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
+import {DisplayExternalImage, EditExternalImage} from "@/components/ExternalImage";
 
 export function EditableDefaultImageTemplate({panel,handleInput,uploadPhoto}){
     return(
@@ -11,11 +12,9 @@ export function EditableDefaultImageTemplate({panel,handleInput,uploadPhoto}){
                 {panel.template}
             </p>
             <p>{panel._id}</p>
-            <QueryClientWrapper>
-                <div className={'h-60 flex justify-center'}>
-                    <EditablePanelImage panelId={panel._id} imagePosition={1} uploadPhoto={uploadPhoto}/>
-                </div>
-            </QueryClientWrapper>
+            <div className={'h-60 flex justify-center'}>
+                <EditExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
+            </div>
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
         </BaseTemplate>
     )
@@ -26,11 +25,9 @@ export function DisplayDefaultImageTemplate({panel}){
 
     return(
         <BaseTemplate>
-            <QueryClientProvider client={imageQueryClient}>
-                <div className={'h-60 flex justify-center'}>
-                    <DisplayPanelImage panelId={panel._id} imagePosition={1}/>
-                </div>
-            </QueryClientProvider>
+            <div className={'h-60 flex justify-center'}>
+                <DisplayExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
+            </div>
         </BaseTemplate>
     )
 }

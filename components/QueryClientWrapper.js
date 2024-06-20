@@ -4,8 +4,9 @@ import {Suspense} from "react";
 // import {ErrorBoundary} from "react-error-boundary";
 export const runtime='edge'
 
-export default function QueryClientWrapper({children}){
-    const queryClient = new QueryClient()
+export default function QueryClientWrapper({children,givenClient}){
+
+    const queryClient = givenClient || new QueryClient()
     console.log("Fresh query client")
     return(
         <QueryClientProvider client={queryClient}>

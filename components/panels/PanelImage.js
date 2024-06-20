@@ -178,7 +178,7 @@ export function DisplayPanelImage({panelId,imagePosition}){
                 body: JSON.stringify(
                     {
                         panelId: panelId,
-                        imagePosition: imagePosition,
+                        imagePosition: imagePosition.toString(),
                     })
             })
             if (!response.ok) {
@@ -194,11 +194,14 @@ export function DisplayPanelImage({panelId,imagePosition}){
         })
     }
     const {data,error,isFetching, refetch} = useQuery({queryKey:['images',panelId, imagePosition],queryFn:getImages})
+    // useEffect(()=>{
+    //     console.log("data",data)
+    // },[data])
     return(
         <>
             {data?
                 <div className={'object-contain flex'} >
-                    <img className={'object-contain'} alt={'altt'} src={data.src}/>
+                    <img className={'object-contain'} alt={'alt'} src={data.src}/>
                 </div>
                 :
                 isFetching?

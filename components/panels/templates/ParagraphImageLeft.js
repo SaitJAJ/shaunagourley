@@ -3,6 +3,7 @@ import {QueryClient, QueryClientProvider, useQueryClient} from "@tanstack/react-
 import {DisplayPanelImage, EditablePanelImage} from "@/components/panels/PanelImage";
 import {EditableParagraph} from "@/components/paragraph/Paragraph";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
+import {DisplayExternalImage} from "@/components/ExternalImage";
 
 export function EditableParagraphImageLeft({panel,handleInput,uploadPhoto}){
     const imageQueryClient = new QueryClient()
@@ -31,11 +32,9 @@ export function DisplayParagraphImageLeft({panel}){
     return(
         <BaseTemplate>
             <div className={'h-fit caret-black '}>
-                <QueryClientProvider client={imageQueryClient}>
-                    <div className={'h-60 flex float-left min-h-8'}>
-                        <DisplayPanelImage panelId={panel._id} imagePosition={1}/>
-                    </div>
-                </QueryClientProvider>
+                <div className={'h-60 flex float-left min-h-8'}>
+                    <DisplayExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
+                </div>
                 <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'}  dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}}>
                 </p>
             </div>
