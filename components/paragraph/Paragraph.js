@@ -1,7 +1,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDebouncedCallback} from "use-debounce";
 import {useEffect, useState} from "react";
-
+import MyTiptap from "@/components/MyTiptap";
 export function EditableParagraph({panel}){
     const queryClient = useQueryClient()
     const [cursorPosition,setCursorPosition] = useState()
@@ -78,9 +78,11 @@ export function EditableParagraph({panel}){
     },[panel.paragraphs])
     return(
         <>
-            <Tiptap/>
-            <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={handleInput}>
-            </p>
+            <MyTiptap content={panel.paragraphs?panel.paragraphs[0]:""} onInput={handleInput}>
+
+            </MyTiptap>
+            {/*<p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={handleInput}>*/}
+            {/*</p>*/}
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
         </>
         )

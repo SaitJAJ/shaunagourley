@@ -4,9 +4,9 @@ import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
-import React from 'react'
+import React, {useEffect} from 'react'
 
-export default function MyTiptap(){
+export default function MyTiptap({content=""}){
     const extensions = [
         Color.configure({ types: [TextStyle.name, ListItem.name] }),
         TextStyle.configure({ types: [ListItem.name] }),
@@ -22,15 +22,27 @@ export default function MyTiptap(){
         }),
     ]
 
-    const content = '<p>Hello World!</p>'
-
+    // const content = '<p>Hello
     return(
         <>
             <EditorProvider extensions={extensions} content={content} slotBefore={<MenuBar/>}>
+                <EditorLogger/>
             </EditorProvider>
         </>
     )
 }
+const EditorLogger = ()=>{
+    const editor = useCurrentEditor();
+    useEffect(()=>{
+        editor.editor.on('update',({editor})=>{
+            console.log(editor.getHTML())
+        })
+    },[editor])
+
+
+    return(<></>)
+}
+
 const MenuBar = () => {
     const { editor } = useCurrentEditor()
 
@@ -123,24 +135,24 @@ const MenuBar = () => {
                 >
                     H3
                 </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-                    className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}
-                >
-                    H4
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-                    className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}
-                >
-                    H5
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-                    className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}
-                >
-                    H6
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}*/}
+                {/*    className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    H4*/}
+                {/*</button>*/}
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}*/}
+                {/*    className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    H5*/}
+                {/*</button>*/}
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}*/}
+                {/*    className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    H6*/}
+                {/*</button>*/}
                 <button
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                     className={editor.isActive('bulletList') ? 'is-active' : ''}
@@ -153,18 +165,18 @@ const MenuBar = () => {
                 >
                     Ordered list
                 </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                    className={editor.isActive('codeBlock') ? 'is-active' : ''}
-                >
-                    Code block
-                </button>
-                <button
-                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                    className={editor.isActive('blockquote') ? 'is-active' : ''}
-                >
-                    Blockquote
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().toggleCodeBlock().run()}*/}
+                {/*    className={editor.isActive('codeBlock') ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    Code block*/}
+                {/*</button>*/}
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().toggleBlockquote().run()}*/}
+                {/*    className={editor.isActive('blockquote') ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    Blockquote*/}
+                {/*</button>*/}
                 <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
                     Horizontal rule
                 </button>
@@ -195,12 +207,12 @@ const MenuBar = () => {
                 >
                     Redo
                 </button>
-                <button
-                    onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-                    className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
-                >
-                    Purple
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => editor.chain().focus().setColor('#958DF1').run()}*/}
+                {/*    className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}*/}
+                {/*>*/}
+                {/*    Purple*/}
+                {/*</button>*/}
             </div>
         </div>
     )
