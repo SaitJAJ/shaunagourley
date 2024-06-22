@@ -25,21 +25,21 @@ export function EditExternalImage({imageKeys}){
 
     const getImages=async ()=>{
         return new Promise(async (resolve, reject) => {
-            let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/findone", {
-                method: "POST",
-                body: JSON.stringify(imageKeys)
-            })
-            if (!response.ok) {
-                throw new Error("Received status that was not ok!")
-            }
-            let data = await response.json()
-            if(data.document === null){
-                resolve({src:null})
-            }else{
-                let blob = new Blob([Buffer.from(data.document.srcBuffer)])
-                let newData = {src:URL.createObjectURL(blob)}
-                resolve(newData)
-            }
+            // let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/findone", {
+            //     method: "POST",
+            //     body: JSON.stringify(imageKeys)
+            // })
+            // if (!response.ok) {
+            //     throw new Error("Received status that was not ok!")
+            // }
+            // let data = await response.json()
+            // if(data.document === null){
+            //     resolve({src:null})
+            // }else{
+            //     let blob = new Blob([Buffer.from(data.document.srcBuffer)])
+            //     let newData = {src:URL.createObjectURL(blob)}
+            //     resolve(newData)
+            // }
         })
     }
 

@@ -23,7 +23,6 @@ export async function POST(req,res){
         update:query.update,
         upsert:true
     })
-    console.log(data)
     return new Response(JSON.stringify(data))
     // return new Response()
 }

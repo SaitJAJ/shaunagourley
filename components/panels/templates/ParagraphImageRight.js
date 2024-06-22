@@ -2,7 +2,7 @@ import BaseTemplate from "@/components/panels/templates/BaseTemplate";
 import {QueryClient, QueryClientProvider, useQueryClient} from "@tanstack/react-query";
 import {DisplayPanelImage, EditablePanelImage} from "@/components/panels/PanelImage";
 import QueryClientWrapper from "@/components/QueryClientWrapper";
-import {EditableParagraph} from "@/components/paragraph/Paragraph";
+import {DisplayParagraph, EditableParagraph} from "@/components/paragraph/Paragraph";
 import {DisplayExternalImage, EditExternalImage} from "@/components/ExternalImage";
 
 export function EditableParagraphImageRight({panel}){
@@ -18,9 +18,9 @@ export function EditableParagraphImageRight({panel}){
                         <EditExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
                     </div>
                 </QueryClientWrapper>
-                {/*<QueryClientWrapper>*/}
-                {/*    <EditableParagraph panel={panel}/>*/}
-                {/*</QueryClientWrapper>*/}
+                <QueryClientWrapper>
+                    <EditableParagraph panel={panel}/>
+                </QueryClientWrapper>
             </div>
         </BaseTemplate>
     )
@@ -35,7 +35,7 @@ export function DisplayParagraphImageRight({panel}){
                     <DisplayExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
                 </div>
                 <QueryClientWrapper>
-                    <EditableParagraph panel={panel}/>
+                    <DisplayParagraph panel={panel}/>
                 </QueryClientWrapper>
             </div>
         </BaseTemplate>

@@ -1,8 +1,10 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDebouncedCallback} from "use-debounce";
+import {useEffect, useState} from "react";
 
 export function EditableParagraph({panel}){
     const queryClient = useQueryClient()
+    const [cursorPosition,setCursorPosition] = useState()
     const editArticle=async (panel)=>{
         let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/updateone", {
             method: "POST",
@@ -51,10 +53,9 @@ export function EditableParagraph({panel}){
             case("p"):
                 if(newPanel.paragraphs){
                     let panelContent = e.target.innerHTML
-                    panelContent.replace("<div>",'')
-                    panelContent.replace("</div>",'')
-                    console.log(panelContent)
                     newPanel.paragraphs[editLocation] = panelContent
+                    changeCursor()
+                    // setCursorPosition()
                     break
                 }
                 break
@@ -62,10 +63,22 @@ export function EditableParagraph({panel}){
                 break
         }
         mutation.mutate(newPanel)
-    },7500)
-
+    },1500)
+    const changeCursor=()=>{
+        // console.log("changing cursor")
+        let contentEle = document.getElementById("p:0")
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.setStart(contentEle, contentEle.childNodes.length);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+    useEffect(()=>{
+    },[panel.paragraphs])
     return(
         <>
+            <Tiptap/>
             <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={handleInput}>
             </p>
             <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>

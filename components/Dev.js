@@ -1,5 +1,5 @@
 'use client'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 
 export default function Dev(){
@@ -18,9 +18,9 @@ export default function Dev(){
             router.push(res.url)
         }
         let data = (await res.json())
-        console.log(JSON.stringify(data))
         setOutput(JSON.stringify(data))
     }
+
     return(
         <>
             <input type={'text'} className={'w-60'} value={stateVal} onChange={(e)=>{setStateVal(e.target.value)}}/>
