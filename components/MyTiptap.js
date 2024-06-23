@@ -1,12 +1,14 @@
 import '/app/editorStyles.css'
-import {BubbleMenu, EditorProvider, FloatingMenu, useCurrentEditor} from "@tiptap/react";
+import {BubbleMenu, EditorContent, EditorProvider, FloatingMenu, useCurrentEditor, useEditor} from "@tiptap/react";
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
 import React, {useEffect} from 'react'
 
-export default function MyTiptap({content=""}){
+export default function MyTiptap({content="Placeholder Text", onInput}){
+
+
     const extensions = [
         Color.configure({ types: [TextStyle.name, ListItem.name] }),
         TextStyle.configure({ types: [ListItem.name] }),
@@ -21,26 +23,26 @@ export default function MyTiptap({content=""}){
             },
         }),
     ]
-
-    // const content = '<p>Hello
     return(
-        <>
-            <EditorProvider extensions={extensions} content={content} slotBefore={<MenuBar/>}>
-                <EditorLogger/>
-            </EditorProvider>
-        </>
+        <EditorProvider extensions={extensions} content={content} slotBefore={<MenuBar/>}>
+            <MyEditor handleUpdate={onInput}/>
+        </EditorProvider>
     )
 }
-const EditorLogger = ()=>{
-    const editor = useCurrentEditor();
+const MyEditor=({handleUpdate})=>{
+    const editor =useCurrentEditor().editor;
+
     useEffect(()=>{
-        editor.editor.on('update',({editor})=>{
-            console.log(editor.getHTML())
-        })
+        if(editor){
+            editor.on('update',({editor})=>{
+                handleUpdate(editor)
+            })
+        }
     },[editor])
 
-
-    return(<></>)
+    return(
+        <EditorContent editor={editor} className={'border border-black'}/>
+    )
 }
 
 const MenuBar = () => {

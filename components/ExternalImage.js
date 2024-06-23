@@ -110,6 +110,8 @@ export function EditExternalImage({imageKeys}){
     )
 }
 export function DisplayExternalImage({imageKeys}){
+    const queryClient = useQueryClient();
+
     const getImages=async ()=>{
         return new Promise(async (resolve, reject) => {
             let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/images/findone", {

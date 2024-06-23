@@ -46,22 +46,21 @@ export function EditableParagraph({panel}){
             }
         })
     const handleInput =  useDebouncedCallback((e)=>{
-        e.preventDefault()
         let newPanel = Object.assign({paragraphs:[]},panel);
-        let [editType,editLocation] = e.target.id.split(':')
-        switch(editType){
-            case("p"):
-                if(newPanel.paragraphs){
-                    let panelContent = e.target.innerHTML
-                    newPanel.paragraphs[editLocation] = panelContent
-                    changeCursor()
+        // let [editType,editLocation] = e.target.id.split(':')
+        // switch(editType){
+        //     case("p"):
+        //         if(newPanel.paragraphs){
+                    let panelContent = e.getHTML()
+                    newPanel.paragraphs[0] = panelContent
+                    // changeCursor()
                     // setCursorPosition()
-                    break
-                }
-                break
-            case("i"):
-                break
-        }
+        //             break
+        //         }
+        //         break
+        //     case("i"):
+        //         break
+        // }
         mutation.mutate(newPanel)
     },1500)
     const changeCursor=()=>{
@@ -74,10 +73,15 @@ export function EditableParagraph({panel}){
         selection.removeAllRanges();
         selection.addRange(range);
     }
-    useEffect(()=>{
-    },[panel.paragraphs])
+
+    const testInput=(editor)=>{
+        console.log(editor.getHTML())
+    }
+
+
     return(
         <>
+            {panel.paragraphs?panel.paragraphs[0]:""}
             <MyTiptap content={panel.paragraphs?panel.paragraphs[0]:""} onInput={handleInput}>
 
             </MyTiptap>
