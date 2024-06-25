@@ -1,3 +1,4 @@
+'use client'
 import {BubbleMenu, EditorContent, EditorProvider, FloatingMenu, useCurrentEditor, useEditor} from "@tiptap/react";
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
@@ -24,13 +25,13 @@ export default function MyTiptap({content="Placeholder Text", onInput}){
     ]
     const editorAttributes={
         attributes:{
-            class:"min-h-[1.2lh] p-[.1lh] border border-black m-1"
+            class:"min-h-[1.2lh] grow p-[.1lh] border border-black mx-2 mb-2 text-overflow bg-white"
         }
     }
     return(
         <EditorProvider extensions={extensions} content={content} slotBefore={<MenuBar/>} editorProps={editorAttributes}>
             <MyEditor handleUpdate={onInput}/>
-            <EditorContent editor={useCurrentEditor().editor} />
+            {/*<EditorContent editor={useCurrentEditor().editor} />*/}
         </EditorProvider>
     )
 }
@@ -58,8 +59,8 @@ const MenuBar = () => {
     }
 
     return (
-        <div className={'border-2 border-black'}>
-            <div className={'border-2 border-black flex justify-center align-bottom'}>
+        <div className={'border-t border-x border-black mx-2 mt-2 bg-white '}>
+            <div className={'flex md:justify-center transition: align-bottom overflow-clip'}>
                 <div className={'flex align-bottom text-lg'}>
                     <button
                         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -126,7 +127,8 @@ const MenuBar = () => {
                 {/*>*/}
                 {/*    Paragraph*/}
                 {/*</button>*/}
-                <div className={'flex align-bottom text-lg'}>
+
+                <div className={'flex align-bottom text-lg '}>
                     <button
                         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                         className={editor.isActive('heading', { level: 1 }) ? 'bg-green-200 border border-gray-500 px-1' : ' border border-gray-500 px-1'}
@@ -179,13 +181,13 @@ const MenuBar = () => {
                 <div className={'flex align-bottom text-lg'}>
                     <button
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        className={editor.isActive('bulletList') ? 'is-active border border-gray-500 px-1' : ' border border-gray-500 px-1'}
+                        className={editor.isActive('bulletList') ? 'is-active border border-gray-500 px-1 text-nowrap' : ' border border-gray-500 px- text-nowrap'}
                     >
                         Bullet list
                     </button>
                     <button
                         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        className={editor.isActive('orderedList') ? 'is-active border border-gray-500 px-1' : ' border border-gray-500 px-1'}
+                        className={editor.isActive('orderedList') ? 'is-active border border-gray-500 px-1 text-nowrap' : ' border border-gray-500 px-1 text-nowrap'}
                     >
                         Ordered list
                     </button>
@@ -202,12 +204,12 @@ const MenuBar = () => {
                 {/*>*/}
                 {/*    Blockquote*/}
                 {/*</button>*/}
-                {/*<button onClick={() => editor.chain().focus().setHorizontalRule().run()}>*/}
-                {/*    Horizontal rule*/}
-                {/*</button>*/}
-                {/*<button onClick={() => editor.chain().focus().setHardBreak().run()}>*/}
-                {/*    Hard break*/}
-                {/*</button>*/}
+                <button onClick={() => editor.chain().focus().setHorizontalRule().run()}  className={"border border-gray-500 px-2 text-xl"}>
+                    Line
+                </button>
+                <button onClick={() => editor.chain().focus().setHardBreak().run()} className={"border border-gray-500 px-2 text-xl"}>
+                    Break
+                </button>
                 <div className={'flex align-bottom text-lg'}>
                     <button
                         onClick={() => editor.chain().focus().undo().run()}

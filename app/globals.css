@@ -12,6 +12,12 @@
     h3{
         @apply text-lg
     }
+    h4{
+
+    }
+    h5{
+        @apply text-sm
+    }
     input{
         @apply border-2;
         @apply border-black;
@@ -79,4 +85,23 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
+}
+
+ol{
+    list-style-type: decimal;
+    list-style-position: inside;
+}
+ul{
+    list-style-type: disc;
+    list-style-position: inside;
+}
+ul li p, ol li p {
+    display: inline;
+}
+p{
+    min-height: 1lh;
+}
+hr{
+    border-bottom: 1px solid black;
+    margin:2px 40px 2px 40px;
 }

@@ -13,11 +13,12 @@ export function EditableParagraphImageRight({panel}){
             </p>
             <p>{panel._id}</p>
             <div className={'h-fit min-h-60 border-black border caret-black '}>
-                <div className={'h-60 flex justify-center float-right min-h-8'}>
-                    <EditExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
-                </div>
                 <QueryClientWrapper>
-                    <EditableParagraph panel={panel}/>
+                    <EditableParagraph panel={panel}>
+                        <div className={'h-60 flex justify-center float-right min-h-8'}>
+                            <EditExternalImage imageKeys={{panelId:panel._id,imagePosition:"1"}}/>
+                        </div>
+                    </EditableParagraph>
                 </QueryClientWrapper>
             </div>
         </BaseTemplate>

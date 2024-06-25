@@ -2,8 +2,20 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useDebouncedCallback} from "use-debounce";
 import {useEffect, useState} from "react";
 import MyTiptap from "@/components/MyTiptap";
-export function EditableParagraph({panel}){
+import DOMPurify from 'dompurify';
+import MovableWrapper from "@/components/MovableWrapper";
+
+
+export function EditableParagraph({panel,children}){
     const queryClient = useQueryClient()
+    const [paragraphContent, setParagraphContent] = useState(()=>{
+        if(panel.paragraphs){
+            return(panel.paragraphs[0])
+        }
+        return ("")
+    })
+
+    const [editParagraph, setEditParagraph] = useState(false)
     const [cursorPosition,setCursorPosition] = useState()
     const editArticle=async (panel)=>{
         let response = await fetch(process.env.NEXT_PUBLIC_API_URL+"/api/panels/updateone", {
@@ -45,14 +57,15 @@ export function EditableParagraph({panel}){
                 })
             }
         })
-    const handleInput =  useDebouncedCallback((e)=>{
+    const updatePanel =  useDebouncedCallback(()=>{
         let newPanel = Object.assign({paragraphs:[]},panel);
         // let [editType,editLocation] = e.target.id.split(':')
         // switch(editType){
         //     case("p"):
         //         if(newPanel.paragraphs){
-                    let panelContent = e.getHTML()
-                    newPanel.paragraphs[0] = panelContent
+        //             let panelContent =
+                    newPanel.paragraphs[0] = paragraphContent
+        console.log(paragraphContent)
                     // changeCursor()
                     // setCursorPosition()
         //             break
@@ -62,7 +75,7 @@ export function EditableParagraph({panel}){
         //         break
         // }
         mutation.mutate(newPanel)
-    },1500)
+    },3500)
     const changeCursor=()=>{
         // console.log("changing cursor")
         let contentEle = document.getElementById("p:0")
@@ -73,21 +86,27 @@ export function EditableParagraph({panel}){
         selection.removeAllRanges();
         selection.addRange(range);
     }
-
-    const testInput=(editor)=>{
-        console.log(editor.getHTML())
+    const handleInput=(editor)=>{
+        setParagraphContent(editor.getHTML())
+        console.log("Now call update panel")
+        updatePanel()
     }
-
-
     return(
         <>
-            {panel.paragraphs?panel.paragraphs[0]:""}
-            <MyTiptap content={panel.paragraphs?panel.paragraphs[0]:""} onInput={handleInput}>
+            <MovableWrapper >
+                <MyTiptap content={paragraphContent} onInput={handleInput}>
 
-            </MyTiptap>
-            {/*<p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} suppressContentEditableWarning dangerouslySetInnerHTML={{__html:panel.paragraphs?panel.paragraphs[0]:""}} contentEditable onInput={handleInput}>*/}
-            {/*</p>*/}
-            <input type={'button'} value={'Update Immediately'} onClick={()=>{handleInput.flush()}}/>
+                </MyTiptap>
+            </MovableWrapper>
+
+            <>
+                {children}
+                <p className={'p-[.1lh] min-h-60 overflow-clip'}  id={'p:0'} dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(paragraphContent)}}>
+                </p>
+            </>
+
+
+
         </>
         )
 }
